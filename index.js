@@ -26,10 +26,18 @@ async function run() {
         // Connect the client to the server	(optional starting in v4.7)
         await client.connect();
         const TravelPlaceCollection = client.db('TourBDirect').collection('Travel');
+        const TourGuideCollection = client.db('TourBDirect').collection('TourGuides');
 
         app.get('/travelplace', async (req, res) => {
 
             const cursor = TravelPlaceCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+
+        })
+        app.get('/tourguides', async (req, res) => {
+
+            const cursor = TourGuideCollection.find();
             const result = await cursor.toArray();
             res.send(result);
 
