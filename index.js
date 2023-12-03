@@ -27,6 +27,7 @@ async function run() {
         await client.connect();
         const TravelPlaceCollection = client.db('TourBDirect').collection('Travel');
         const TourGuideCollection = client.db('TourBDirect').collection('TourGuides');
+        const BookingCollection = client.db('TourBDirect').collection('UserBookings')
 
         // for home section to show only 3 cart
         app.get('/travelplace', async (req, res) => {
@@ -38,23 +39,35 @@ async function run() {
             res.send(result);
 
         })
-        app.get('/allplace',async(req,res)=>{
+        app.get('/allplace', async (req, res) => {
             const cursor = TravelPlaceCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
         // single details based on id
-        app.get('/allplace/:id',async(req,res)=>{
+        app.get('/allplace/:id', async (req, res) => {
             const id = req.params.id;
             const options = {
                 projection: {}
-              };
-              const query = { _id: new ObjectId(id) };
-              const result = await TravelPlaceCollection.findOne(query);
-              res.send(result);
+            };
+            const query = { _id: new ObjectId(id) };
+            const result = await TravelPlaceCollection.findOne(query);
+            res.send(result);
+        })
+        // purchase booking
+        app.post('/mybookings', async (req, res) => {
+            const newBooking = req.body;
+            console.log(newBooking);
+            const result = await BookingCollection.insertOne(newBooking);
+            res.send(result);
+        })
+        // get user booking
+        app.get('/mybookings', async (req, res) => {
+            const cursor = BookingCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
         })
         app.get('/tourguides', async (req, res) => {
-
             const cursor = TourGuideCollection.find();
             const result = await cursor.toArray();
             res.send(result);
