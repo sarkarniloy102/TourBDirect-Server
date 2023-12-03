@@ -28,12 +28,30 @@ async function run() {
         const TravelPlaceCollection = client.db('TourBDirect').collection('Travel');
         const TourGuideCollection = client.db('TourBDirect').collection('TourGuides');
 
+        // for home section to show only 3 cart
         app.get('/travelplace', async (req, res) => {
-
-            const cursor = TravelPlaceCollection.find();
+            const query = {};
+            const sort = { length: -1 };
+            const limit = 3;
+            const cursor = TravelPlaceCollection.find(query).sort(sort).limit(limit);
             const result = await cursor.toArray();
             res.send(result);
 
+        })
+        app.get('/allplace',async(req,res)=>{
+            const cursor = TravelPlaceCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+        // single details based on id
+        app.get('/allplace/:id',async(req,res)=>{
+            const id = req.params.id;
+            const options = {
+                projection: {}
+              };
+              const query = { _id: new ObjectId(id) };
+              const result = await TravelPlaceCollection.findOne(query);
+              res.send(result);
         })
         app.get('/tourguides', async (req, res) => {
 
