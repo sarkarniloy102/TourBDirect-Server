@@ -27,7 +27,8 @@ async function run() {
         await client.connect();
         const TravelPlaceCollection = client.db('TourBDirect').collection('Travel');
         const TourGuideCollection = client.db('TourBDirect').collection('TourGuides');
-        const BookingCollection = client.db('TourBDirect').collection('UserBookings')
+        const BookingCollection = client.db('TourBDirect').collection('UserBookings');
+        const UserCollection = client.db('TourBDirect').collection('Users')
 
         // for home section to show only 3 cart
         app.get('/travelplace', async (req, res) => {
@@ -96,6 +97,19 @@ async function run() {
             const cursor = TravelPlaceCollection.find({ type: targetType });
             const result = await cursor.toArray();
             console.log(result);
+            res.send(result);
+        })
+        //post  user information
+        app.post('/Users', async (req, res) => {
+            const newUser = req.body;
+            console.log(newUser);
+            const result = await UserCollection .insertOne(newUser);
+            res.send(result);
+        })
+        // get user information
+        app.get('/Users', async (req, res) => {
+            const cursor = UserCollection.find();
+            const result = await cursor.toArray();
             res.send(result);
         })
         // Send a ping to confirm a successful connection
