@@ -83,6 +83,21 @@ async function run() {
             const result = await TourGuideCollection.findOne(query);
             res.send(result);
         })
+
+        app.get('/tourguides', async (req, res) => {
+            const cursor = TourGuideCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+
+        })
+        // find multiple data based on type
+        app.get('/place/:type', async (req, res) => {
+            const targetType = req.params.type;
+            const cursor = TravelPlaceCollection.find({ type: targetType });
+            const result = await cursor.toArray();
+            console.log(result);
+            res.send(result);
+        })
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
